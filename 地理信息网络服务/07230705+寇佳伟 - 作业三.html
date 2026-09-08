@@ -1,0 +1,148 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>徐州简介</title>
+    <style>
+        body {
+            margin: 0;
+            font-family: "Microsoft YaHei", Arial, sans-serif;
+            background: #f5f5f5;
+            line-height: 1.8;
+            color: #333;
+        }
+        .container {
+            width: 80%;
+            max-width: 900px;
+            margin: 30px auto;
+            background: #fff;
+            padding: 25px;
+            border-radius: 10px;
+            box-shadow: 0 0 10px rgba(0, 0, 0, 0.1);
+        }
+        h1, h2, h3 {
+            text-align: center;
+            color: #1f4f69;
+        }
+        .nav {
+            text-align: center;
+            margin: 20px 0;
+        }
+        .nav a {
+            margin: 0 10px;
+            text-decoration: none;
+            color: #0b5fa5;
+        }
+        .box {
+            margin-top: 20px;
+            padding: 15px;
+            background: #f9f9f9;
+            border: 1px solid #ddd;
+            border-radius: 8px;
+        }
+        ul {
+            margin: 0;
+            padding-left: 20px;
+        }
+        pre {
+            white-space: pre-wrap;
+            word-break: break-word;
+            background: #eee;
+            padding: 10px;
+            border-radius: 6px;
+        }
+        #backTopBtn {
+            position: fixed;
+            right: 20px;
+            bottom: 20px;
+            padding: 10px 15px;
+            border: none;
+            background: #2c6e91;
+            color: white;
+            border-radius: 8px;
+            cursor: pointer;
+            display: none;
+        }
+    </style>
+</head>
+<body>
+    <div class="container">
+        <h1>徐州简介</h1>
+        <h2>淮海经济区中心城市</h2>
+        <div class="nav">
+            <a href="#history">历史沿革</a>
+            <a href="#geography">地理环境</a>
+            <a href="#feature">特色信息</a>
+        </div>
+        <div class="box" id="history">
+            <h3>历史沿革</h3>
+            <p>
+                徐州历史悠久，古称彭城，是中国著名的历史文化名城。
+                自古以来，徐州就是重要的交通枢纽和兵家必争之地。
+            </p>
+        </div>
+        <div class="box" id="geography">
+            <h3>地理环境</h3>
+            <p>
+                徐州市地形以平原为主，地势总体由西北向东南倾斜，
+                中部和东部有少量丘陵山地，是江苏省重要的区域中心城市之一。
+            </p>
+        </div>
+        <div class="box" id="feature">
+            <h3>特色信息</h3>
+            <h4>徐州著名景点</h4>
+            <ul id="scenicList"></ul>
+            <h4>徐州特色美食</h4>
+            <ul id="foodList"></ul>
+            <h4>徐州代表高校</h4>
+            <ul id="universityList"></ul>
+            <h4>JSON结果</h4>
+            <pre id="jsonResult"></pre>
+        </div>
+    </div>
+    <button id="backTopBtn">返回顶部</button>
+    <script>
+        var xuzhouInfo = new Object();
+        xuzhouInfo.scenicSpots = ["云龙湖", "龟山汉墓", "彭祖园"];
+        xuzhouInfo.specialFoods = ["地锅鸡", "把子肉", "烙馍"];
+        xuzhouInfo.universities = ["中国矿业大学", "江苏师范大学", "徐州医科大学"];
+        var renderList = (data = [], elementId = "") => {
+            var ul = document.getElementById(elementId);
+            if (!ul) return;
+            ul.innerHTML = data.map(function(item) {
+                return "<li>" + item + "</li>";
+            }).join("");
+        };
+        var renderJson = (obj = new Object(), elementId = "") => {
+            var target = document.getElementById(elementId);
+            if (!target) return;
+            target.textContent = JSON.stringify(obj);
+        };
+        var toggleBackTopBtn = (showHeight = 200) => {
+            var btn = document.getElementById("backTopBtn");
+            if (!btn) return;
+            btn.style.display = window.scrollY > showHeight ? "block" : "none";
+        };
+        var scrollToTop = (topValue = 0) => {
+            window.scrollTo({
+                top: topValue,
+                behavior: "smooth"
+            });
+        };
+        window.onload = function() {
+            renderList(xuzhouInfo.scenicSpots, "scenicList");
+            renderList(xuzhouInfo.specialFoods, "foodList");
+            renderList(xuzhouInfo.universities, "universityList");
+            renderJson(xuzhouInfo, "jsonResult");
+
+            document.getElementById("backTopBtn").onclick = function() {
+                scrollToTop();
+            };
+        };
+        window.onscroll = function() {
+            toggleBackTopBtn();
+        };
+    </script>
+</body>
+</html>

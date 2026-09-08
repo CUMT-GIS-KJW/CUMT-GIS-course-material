@@ -1,0 +1,1262 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>中国矿业大学南湖校区WebGIS</title>
+
+  <script src="https://api.map.baidu.com/api?v=1.0&type=webgl&ak=bQv7jYETBKivN16ZLvkZnqGNt3zwunA5"></script>
+
+  <style>
+    * {
+      margin: 0;
+      padding: 0;
+      box-sizing: border-box;
+      font-family: "Microsoft YaHei", "PingFang SC", "Segoe UI", sans-serif;
+    }
+
+    :root {
+      --blue: #00529b;
+      --blue-2: #2f80ed;
+      --blue-3: #eaf4ff;
+      --green: #16a34a;
+      --red: #dc2626;
+      --orange: #f59e0b;
+      --text: #1f2937;
+      --muted: #6b7280;
+      --panel: rgba(255, 255, 255, 0.94);
+      --shadow: 0 16px 40px rgba(15, 23, 42, 0.16);
+      --shadow-soft: 0 8px 22px rgba(15, 23, 42, 0.10);
+    }
+
+    body {
+      width: 100vw;
+      height: 100vh;
+      overflow: hidden;
+      background: #eff6ff;
+    }
+
+    #map {
+      width: 100%;
+      height: 100%;
+    }
+
+    #loading {
+      position: fixed;
+      top: 50%;
+      left: 50%;
+      z-index: 999;
+      transform: translate(-50%, -50%);
+      padding: 18px 26px;
+      border-radius: 18px;
+      background: rgba(0, 82, 155, 0.94);
+      color: #fff;
+      font-size: 14px;
+      box-shadow: var(--shadow);
+    }
+
+    .spin {
+      display: inline-block;
+      margin-right: 8px;
+      animation: spin 1s linear infinite;
+    }
+
+    @keyframes spin {
+      from { transform: rotate(0); }
+      to { transform: rotate(360deg); }
+    }
+
+    .topbar {
+      position: absolute;
+      top: 18px;
+      left: 18px;
+      right: 18px;
+      z-index: 20;
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      gap: 16px;
+      pointer-events: none;
+    }
+
+    .brand-card {
+      pointer-events: auto;
+      min-width: 360px;
+      padding: 16px 20px;
+      border-radius: 22px;
+      color: #fff;
+      background:
+        radial-gradient(circle at right top, rgba(255,255,255,0.26), transparent 32%),
+        linear-gradient(135deg, #003b73, #00529b 54%, #3b91f4);
+      box-shadow: var(--shadow);
+    }
+
+    .brand-badge {
+      display: inline-block;
+      padding: 4px 10px;
+      margin-bottom: 8px;
+      border-radius: 999px;
+      background: rgba(255,255,255,0.20);
+      font-size: 12px;
+      letter-spacing: 0.3px;
+    }
+
+    .brand-title {
+      font-size: 20px;
+      font-weight: 800;
+      letter-spacing: 0.4px;
+      margin-bottom: 5px;
+    }
+
+    .brand-subtitle {
+      font-size: 13px;
+      line-height: 1.6;
+      opacity: 0.92;
+    }
+
+    .status-card {
+      pointer-events: auto;
+      max-width: 520px;
+      min-height: 52px;
+      display: flex;
+      align-items: center;
+      gap: 10px;
+      padding: 12px 16px;
+      border-radius: 999px;
+      background: var(--panel);
+      box-shadow: var(--shadow-soft);
+      backdrop-filter: blur(14px);
+      color: var(--text);
+      font-size: 13px;
+      line-height: 1.5;
+      border: 1px solid rgba(255,255,255,0.78);
+    }
+
+    .status-dot {
+      width: 10px;
+      height: 10px;
+      border-radius: 50%;
+      flex: 0 0 auto;
+      background: var(--blue-2);
+    }
+
+    .status-card.success .status-dot { background: var(--green); }
+    .status-card.error .status-dot { background: var(--red); }
+    .status-card.warn .status-dot { background: var(--orange); }
+
+    .map-tools {
+      position: absolute;
+      top: 126px;
+      right: 18px;
+      z-index: 19;
+      display: flex;
+      flex-direction: column;
+      gap: 10px;
+    }
+
+    .tool-btn {
+      width: 46px;
+      height: 46px;
+      border: none;
+      border-radius: 16px;
+      background: rgba(255, 255, 255, 0.96);
+      color: var(--blue);
+      cursor: pointer;
+      box-shadow: var(--shadow-soft);
+      font-size: 18px;
+      transition: 0.22s ease;
+      backdrop-filter: blur(12px);
+    }
+
+    .tool-btn:hover {
+      color: #fff;
+      background: var(--blue);
+      transform: translateY(-2px);
+    }
+
+    .control-dock {
+      position: absolute;
+      left: 18px;
+      right: 18px;
+      bottom: 18px;
+      z-index: 18;
+      display: grid;
+      grid-template-columns: 1.05fr 1.25fr;
+      gap: 16px;
+      pointer-events: none;
+    }
+
+    .dock-card {
+      pointer-events: auto;
+      padding: 18px;
+      border-radius: 24px;
+      background: var(--panel);
+      box-shadow: var(--shadow);
+      border: 1px solid rgba(255, 255, 255, 0.82);
+      backdrop-filter: blur(16px);
+    }
+
+    .dock-head {
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      gap: 12px;
+      margin-bottom: 14px;
+    }
+
+    .dock-title {
+      display: flex;
+      align-items: center;
+      gap: 10px;
+      color: var(--text);
+      font-size: 17px;
+      font-weight: 800;
+    }
+
+    .dock-icon {
+      width: 34px;
+      height: 34px;
+      display: inline-flex;
+      align-items: center;
+      justify-content: center;
+      border-radius: 12px;
+      background: var(--blue-3);
+      color: var(--blue);
+      font-size: 18px;
+    }
+
+    .dock-desc {
+      color: var(--muted);
+      font-size: 12px;
+      line-height: 1.65;
+      margin-bottom: 12px;
+    }
+
+    .fixed-end {
+      display: inline-flex;
+      align-items: center;
+      gap: 8px;
+      padding: 8px 12px;
+      margin-bottom: 12px;
+      border-radius: 999px;
+      color: #b91c1c;
+      background: #fff1f2;
+      border: 1px solid #fecdd3;
+      font-size: 13px;
+      font-weight: 800;
+    }
+
+    .quick-grid {
+      display: grid;
+      grid-template-columns: repeat(6, 1fr);
+      gap: 8px;
+      margin-bottom: 12px;
+    }
+
+    .route-grid {
+      display: grid;
+      grid-template-columns: repeat(5, 1fr);
+      gap: 8px;
+      margin-bottom: 12px;
+    }
+
+    button {
+      font-family: inherit;
+    }
+
+    .chip-btn {
+      height: 34px;
+      border: 1px solid #bfdbfe;
+      border-radius: 999px;
+      background: #fff;
+      color: var(--blue);
+      cursor: pointer;
+      font-size: 12px;
+      transition: 0.2s ease;
+    }
+
+    .chip-btn:hover {
+      color: #fff;
+      background: linear-gradient(135deg, var(--blue), var(--blue-2));
+      border-color: transparent;
+      transform: translateY(-1px);
+    }
+
+    .form-row {
+      display: grid;
+      grid-template-columns: 1fr 110px;
+      gap: 10px;
+      align-items: center;
+    }
+
+    .route-form {
+      display: grid;
+      grid-template-columns: 1fr 132px;
+      gap: 10px;
+      align-items: start;
+    }
+
+    .input-wrap {
+      position: relative;
+    }
+
+    .input-symbol {
+      position: absolute;
+      left: 14px;
+      top: 50%;
+      transform: translateY(-50%);
+      color: #94a3b8;
+      font-size: 16px;
+    }
+
+    input {
+      width: 100%;
+      height: 44px;
+      padding: 0 12px 0 40px;
+      border: 1px solid #dbe3ef;
+      border-radius: 15px;
+      outline: none;
+      background: #fff;
+      color: var(--text);
+      font-size: 14px;
+      transition: 0.2s ease;
+    }
+
+    input:focus {
+      border-color: var(--blue-2);
+      box-shadow: 0 0 0 4px rgba(47, 128, 237, 0.12);
+    }
+
+    .main-btn {
+      height: 44px;
+      border: none;
+      border-radius: 15px;
+      color: #fff;
+      background: linear-gradient(135deg, var(--blue), var(--blue-2));
+      font-weight: 800;
+      cursor: pointer;
+      box-shadow: 0 10px 20px rgba(47, 128, 237, 0.22);
+      transition: 0.2s ease;
+    }
+
+    .main-btn:hover {
+      transform: translateY(-1px);
+      box-shadow: 0 12px 26px rgba(47, 128, 237, 0.32);
+    }
+
+    .ghost-btn {
+      height: 44px;
+      border: 1px solid #bfdbfe;
+      border-radius: 15px;
+      color: var(--blue);
+      background: #fff;
+      font-weight: 700;
+      cursor: pointer;
+      transition: 0.2s ease;
+    }
+
+    .ghost-btn:hover {
+      color: #fff;
+      background: var(--blue);
+    }
+
+    .mini-search-btn {
+      position: absolute;
+      top: 5px;
+      right: 5px;
+      width: 34px;
+      height: 34px;
+      border: none;
+      border-radius: 11px;
+      color: #fff;
+      background: var(--blue);
+      cursor: pointer;
+      transition: 0.2s ease;
+    }
+
+    .mini-search-btn:hover {
+      background: var(--blue-2);
+      transform: scale(1.04);
+    }
+
+    .route-input input {
+      padding-right: 44px;
+    }
+
+    .suggest-box {
+      margin-top: 8px;
+      max-height: 112px;
+      overflow-y: auto;
+      border-radius: 14px;
+    }
+
+    .suggest-item {
+      padding: 9px 10px;
+      margin-bottom: 6px;
+      border-radius: 12px;
+      background: #fff;
+      border: 1px solid #e5e7eb;
+      cursor: pointer;
+      transition: 0.2s ease;
+    }
+
+    .suggest-item:hover {
+      background: #f0f7ff;
+      border-color: #bfdbfe;
+    }
+
+    .suggest-title {
+      font-size: 13px;
+      font-weight: 800;
+      color: var(--text);
+      margin-bottom: 3px;
+    }
+
+    .suggest-address {
+      color: var(--muted);
+      font-size: 11px;
+      line-height: 1.4;
+    }
+
+    .result-drawer {
+      position: absolute;
+      top: 206px;
+      right: 80px;
+      width: 360px;
+      max-height: calc(100vh - 250px);
+      z-index: 17;
+      display: none;
+      flex-direction: column;
+      border-radius: 24px;
+      background: var(--panel);
+      box-shadow: var(--shadow);
+      border: 1px solid rgba(255,255,255,0.82);
+      backdrop-filter: blur(16px);
+      overflow: hidden;
+    }
+
+    .result-drawer.show {
+      display: flex;
+    }
+
+    .result-head {
+      padding: 14px 16px;
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      color: #fff;
+      background: linear-gradient(135deg, var(--blue), var(--blue-2));
+    }
+
+    .result-head-title {
+      font-size: 15px;
+      font-weight: 800;
+    }
+
+    .close-btn {
+      width: 30px;
+      height: 30px;
+      border: none;
+      border-radius: 50%;
+      background: rgba(255,255,255,0.18);
+      color: #fff;
+      cursor: pointer;
+    }
+
+    .close-btn:hover {
+      background: rgba(255,255,255,0.30);
+    }
+
+    .result-body {
+      padding: 14px;
+      overflow-y: auto;
+    }
+
+    .result-list {
+      display: flex;
+      flex-direction: column;
+      gap: 10px;
+    }
+
+    .poi-card {
+      padding: 12px;
+      border-radius: 16px;
+      background: #fff;
+      border: 1px solid #e5e7eb;
+      cursor: pointer;
+      transition: 0.2s ease;
+    }
+
+    .poi-card:hover {
+      background: #f6fbff;
+      border-color: #bfdbfe;
+      transform: translateY(-1px);
+    }
+
+    .poi-title {
+      font-size: 14px;
+      font-weight: 800;
+      color: var(--text);
+      line-height: 1.45;
+      margin-bottom: 4px;
+    }
+
+    .poi-address {
+      color: var(--muted);
+      font-size: 12px;
+      line-height: 1.5;
+      margin-bottom: 10px;
+    }
+
+    .poi-actions {
+      display: flex;
+      gap: 8px;
+    }
+
+    .small-btn {
+      height: 32px;
+      padding: 0 11px;
+      border-radius: 10px;
+      border: 1px solid #bfdbfe;
+      background: #fff;
+      color: var(--blue);
+      cursor: pointer;
+      font-size: 12px;
+      transition: 0.2s ease;
+    }
+
+    .small-btn:hover {
+      color: #fff;
+      background: var(--blue);
+    }
+
+    .empty-tip {
+      padding: 16px;
+      text-align: center;
+      color: var(--muted);
+      background: #fff;
+      border: 1px dashed #d1d5db;
+      border-radius: 16px;
+      font-size: 13px;
+    }
+
+    .route-summary {
+      margin-bottom: 12px;
+      padding: 12px;
+      border-radius: 16px;
+      background: #eff6ff;
+      border: 1px solid #bfdbfe;
+    }
+
+    .route-summary-title {
+      color: var(--blue);
+      font-weight: 900;
+      font-size: 15px;
+      margin-bottom: 8px;
+    }
+
+    .route-row {
+      display: flex;
+      justify-content: space-between;
+      gap: 10px;
+      font-size: 13px;
+      line-height: 1.8;
+      color: var(--text);
+    }
+
+    .route-row strong {
+      text-align: right;
+    }
+
+    #routeSteps {
+      font-size: 12px;
+      line-height: 1.7;
+      color: var(--text);
+    }
+
+    @media (max-width: 1080px) {
+      .topbar {
+        flex-direction: column;
+        align-items: flex-start;
+      }
+
+      .brand-card {
+        min-width: auto;
+        width: 100%;
+      }
+
+      .status-card {
+        border-radius: 18px;
+        max-width: none;
+        width: 100%;
+      }
+
+      .control-dock {
+        grid-template-columns: 1fr;
+      }
+
+      .route-form {
+        grid-template-columns: 1fr;
+      }
+
+      .quick-grid,
+      .route-grid {
+        grid-template-columns: repeat(3, 1fr);
+      }
+
+      .result-drawer {
+        right: 18px;
+        left: 18px;
+        width: auto;
+        top: 210px;
+        max-height: 38vh;
+      }
+    }
+  </style>
+</head>
+
+<body>
+  <div id="loading">
+    <span class="spin">◉</span>正在加载南湖校区地图数据...
+  </div>
+
+  <div id="map"></div>
+
+  <div class="topbar">
+    <div class="brand-card">
+      <div class="brand-badge">CUMT Nanhu Campus WebGIS</div>
+      <div class="brand-title">中国矿业大学南湖校区WebGIS</div>
+      <div class="brand-subtitle">校园兴趣点查询与到环境与测绘学院的步行路径规划</div>
+    </div>
+
+    <div class="status-card" id="statusCard">
+      <span class="status-dot"></span>
+      <span id="statusText">系统正在初始化，请稍候...</span>
+    </div>
+  </div>
+
+  <div class="map-tools">
+    <button class="tool-btn" onclick="resetCenter()" title="回到中心">⌂</button>
+    <button class="tool-btn" onclick="setMap2D()" title="二维视图">□</button>
+    <button class="tool-btn" onclick="setMap3D()" title="三维视图">◇</button>
+    <button class="tool-btn" onclick="clearAll()" title="清空结果">×</button>
+  </div>
+
+  <div class="result-drawer" id="resultDrawer">
+    <div class="result-head">
+      <div class="result-head-title" id="resultTitle">结果面板</div>
+      <button class="close-btn" onclick="closeDrawer()">×</button>
+    </div>
+    <div class="result-body">
+      <div id="resultList" class="result-list"></div>
+      <div id="routeSummary"></div>
+      <div id="routeSteps"></div>
+    </div>
+  </div>
+
+  <div class="control-dock">
+    <div class="dock-card">
+      <div class="dock-head">
+        <div class="dock-title">
+          <span class="dock-icon">⌕</span>
+          校园场所搜索
+        </div>
+      </div>
+
+      <div class="dock-desc">
+        支持搜索学院楼、教学楼、宿舍、食堂、超市、银行、图书馆等校内地点。
+      </div>
+
+      <div class="quick-grid">
+        <button class="chip-btn" onclick="quickSearchPOI('图书馆')">图书馆</button>
+        <button class="chip-btn" onclick="quickSearchPOI('教学楼')">教学楼</button>
+        <button class="chip-btn" onclick="quickSearchPOI('宿舍')">宿舍</button>
+        <button class="chip-btn" onclick="quickSearchPOI('食堂')">食堂</button>
+        <button class="chip-btn" onclick="quickSearchPOI('超市')">超市</button>
+        <button class="chip-btn" onclick="quickSearchPOI('银行')">银行</button>
+      </div>
+
+      <div class="form-row">
+        <div class="input-wrap">
+          <span class="input-symbol">⌕</span>
+          <input id="searchKeyword" type="text" placeholder="输入关键词，如：图书馆、宿舍、食堂">
+        </div>
+        <button class="main-btn" onclick="searchPOI()">搜索</button>
+      </div>
+    </div>
+
+    <div class="dock-card">
+      <div class="dock-head">
+        <div class="dock-title">
+          <span class="dock-icon">↝</span>
+          到环测学院路径规划
+        </div>
+      </div>
+
+      <div class="dock-desc">
+        终点已固定为环境与测绘学院，只需输入或选择出发点即可规划步行路线。
+      </div>
+
+      <div class="fixed-end">终点：环境与测绘学院</div>
+
+      <div class="route-grid">
+        <button class="chip-btn" onclick="quickSetStart('桃苑食堂')">桃苑食堂</button>
+        <button class="chip-btn" onclick="quickSetStart('梅苑食堂')">梅苑食堂</button>
+        <button class="chip-btn" onclick="quickSetStart('松苑食堂')">松苑食堂</button>
+        <button class="chip-btn" onclick="quickSetStart('图书馆')">图书馆</button>
+        <button class="chip-btn" onclick="quickSetStart('博学楼')">博学楼</button>
+      </div>
+
+      <div class="route-form">
+        <div>
+          <div class="input-wrap route-input">
+            <span class="input-symbol">起</span>
+            <input id="startPoint" type="text" placeholder="输入起点名称">
+            <button class="mini-search-btn" onclick="searchStartPoint()" title="搜索起点">⌕</button>
+          </div>
+          <div id="startSuggest" class="suggest-box"></div>
+        </div>
+
+        <div style="display:grid; grid-template-columns: 1fr; gap:10px;">
+          <button class="main-btn" onclick="planRoute()">规划到环测学院</button>
+          <button class="ghost-btn" onclick="clearAll()">清空</button>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <script>
+    const CAMPUS = {
+      name: "中国矿业大学南湖校区",
+      city: "徐州市",
+      zoom: 17
+    };
+
+    const FIXED_END_NAME = "环境与测绘学院";
+
+    let map = null;
+    let walkingRoute = null;
+    let CUMT_CENTER = null;
+    let centerMarker = null;
+    let markers = [];
+    let startPoi = null;
+    let endPoi = null;
+    let currentResults = null;
+
+    const $ = (id) => document.getElementById(id);
+
+    window.onload = () => {
+      getCampusCenter();
+      initEvents();
+    };
+
+    function setStatus(text, type = "") {
+      const card = $("statusCard");
+      const textEl = $("statusText");
+
+      card.className = "status-card";
+
+      if (type) {
+        card.classList.add(type);
+      }
+
+      textEl.innerHTML = text;
+    }
+
+    function showDrawer(title) {
+      $("resultDrawer").classList.add("show");
+      $("resultTitle").innerHTML = title;
+    }
+
+    function closeDrawer() {
+      $("resultDrawer").classList.remove("show");
+    }
+
+    function clearDrawerContent() {
+      $("resultList").innerHTML = "";
+      $("routeSummary").innerHTML = "";
+      $("routeSteps").innerHTML = "";
+    }
+
+    function getCampusCenter() {
+      setStatus("正在获取南湖校区中心位置...");
+
+      const search = new BMapGL.LocalSearch(CAMPUS.city, {
+        onSearchComplete: (results) => {
+          const loading = $("loading");
+
+          if (search.getStatus() === BMAP_STATUS_SUCCESS && results.getCurrentNumPois() > 0) {
+            CUMT_CENTER = results.getPoi(0).point;
+            initMap();
+            setStatus("地图加载完成，可进行校园搜索与路线规划。", "success");
+          } else {
+            CUMT_CENTER = new BMapGL.Point(117.1453, 34.2224);
+            initMap();
+            setStatus("未获取到官方坐标，已使用备用坐标加载。", "warn");
+          }
+
+          setTimeout(() => {
+            loading.style.display = "none";
+          }, 1000);
+        }
+      });
+
+      search.search(CAMPUS.name);
+    }
+
+    function initMap() {
+      if (!CUMT_CENTER) return;
+
+      map = new BMapGL.Map("map");
+      map.centerAndZoom(CUMT_CENTER, CAMPUS.zoom);
+      map.enableScrollWheelZoom(true);
+      map.setTilt(45);
+
+      map.addControl(new BMapGL.NavigationControl3D({
+        anchor: BMAP_ANCHOR_BOTTOM_RIGHT,
+        offset: new BMapGL.Size(18, 92)
+      }));
+
+      map.addControl(new BMapGL.ScaleControl({
+        anchor: BMAP_ANCHOR_BOTTOM_LEFT
+      }));
+
+      initRouteService();
+      addCenterMarker();
+      loadFixedEndPoint();
+    }
+
+    function addCenterMarker() {
+      if (!map || !CUMT_CENTER) return;
+
+      if (centerMarker) {
+        map.removeOverlay(centerMarker);
+      }
+
+      centerMarker = new BMapGL.Marker(CUMT_CENTER);
+      map.addOverlay(centerMarker);
+
+      const label = new BMapGL.Label(CAMPUS.name, {
+        offset: new BMapGL.Size(-62, -36)
+      });
+
+      label.setStyle({
+        color: "#00529b",
+        background: "#ffffff",
+        border: "1px solid #bfdbfe",
+        borderRadius: "999px",
+        padding: "5px 10px",
+        fontSize: "12px",
+        fontWeight: "bold",
+        boxShadow: "0 4px 12px rgba(15,23,42,0.16)"
+      });
+
+      centerMarker.setLabel(label);
+    }
+
+    async function loadFixedEndPoint() {
+      try {
+        endPoi = await getPoi(FIXED_END_NAME);
+        addMarker(endPoi.point, "终", "#dc2626");
+        setStatus("终点已固定为：环境与测绘学院。请选择起点进行路径规划。", "success");
+      } catch (error) {
+        setStatus("固定终点获取失败，可稍后点击规划时自动重试。", "warn");
+      }
+    }
+
+    function createSearch(callback) {
+      return new BMapGL.LocalSearch(map, {
+        pageCapacity: 8,
+        onSearchComplete: (results) => {
+          if (callback) callback(results);
+        }
+      });
+    }
+
+    function quickSearchPOI(keyword) {
+      $("searchKeyword").value = keyword;
+      searchPOI();
+    }
+
+    function searchPOI() {
+      const keyword = $("searchKeyword").value.trim();
+
+      if (!keyword) {
+        alert("请输入关键词");
+        return;
+      }
+
+      if (!map || !CUMT_CENTER) return;
+
+      clearMarkers();
+
+      if (walkingRoute) {
+        walkingRoute.clearResults();
+      }
+
+      clearDrawerContent();
+      showDrawer("校园搜索结果");
+      setStatus(`正在搜索校内地点：${keyword} ...`);
+
+      createSearch(displaySearchResults).searchNearby(
+        keyword + " " + CAMPUS.name,
+        CUMT_CENTER,
+        1800
+      );
+    }
+
+    function displaySearchResults(results) {
+      const list = $("resultList");
+      list.innerHTML = "";
+
+      if (!results || results.getCurrentNumPois() === 0) {
+        list.innerHTML = "<div class='empty-tip'>未找到相关场所，请尝试更换关键词。</div>";
+        setStatus("未找到相关场所，请更换关键词后重试。", "error");
+        return;
+      }
+
+      currentResults = results;
+      const points = [];
+
+      for (let i = 0; i < results.getCurrentNumPois(); i++) {
+        const poi = results.getPoi(i);
+
+        if (!poi || !poi.point) continue;
+
+        points.push(poi.point);
+
+        const marker = addMarker(poi.point, String(i + 1), "#00529b");
+        marker.addEventListener("click", () => openInfoWindow(poi));
+
+        const card = document.createElement("div");
+        card.className = "poi-card";
+
+        card.innerHTML = `
+          <div class="poi-title">${i + 1}. ${poi.title}</div>
+          <div class="poi-address">${poi.address || "校内地点"}</div>
+          <div class="poi-actions">
+            <button class="small-btn" onclick="event.stopPropagation(); setStartFromSearch(${i})">从这里出发</button>
+          </div>
+        `;
+
+        card.onclick = () => {
+          map.flyTo(poi.point, 18);
+          openInfoWindow(poi);
+        };
+
+        list.appendChild(card);
+      }
+
+      if (points.length > 1) {
+        map.setViewport(points);
+      } else if (points.length === 1) {
+        map.flyTo(points[0], 18);
+      }
+
+      setStatus(`搜索完成，共找到 ${points.length} 个相关地点。`, "success");
+    }
+
+    function searchStartPoint() {
+      const keyword = $("startPoint").value.trim();
+      const suggest = $("startSuggest");
+
+      if (!keyword) {
+        alert("请输入起点名称");
+        return;
+      }
+
+      startPoi = null;
+      suggest.innerHTML = "";
+      setStatus(`正在搜索起点：${keyword} ...`);
+
+      createSearch((results) => {
+        suggest.innerHTML = "";
+
+        if (!results || results.getCurrentNumPois() === 0) {
+          suggest.innerHTML = "<div class='empty-tip'>未找到起点</div>";
+          setStatus("未找到起点，请更换关键词。", "error");
+          return;
+        }
+
+        for (let i = 0; i < results.getCurrentNumPois(); i++) {
+          const poi = results.getPoi(i);
+
+          if (!poi || !poi.point) continue;
+
+          const item = document.createElement("div");
+          item.className = "suggest-item";
+
+          item.innerHTML = `
+            <div class="suggest-title">${poi.title}</div>
+            <div class="suggest-address">${poi.address || "校内地点"}</div>
+          `;
+
+          item.onclick = () => {
+            startPoi = poi;
+            $("startPoint").value = poi.title;
+            suggest.innerHTML = "";
+
+            refreshRouteMarkers();
+            map.flyTo(poi.point, 18);
+            openInfoWindow(poi);
+
+            setStatus(`起点已设置为：${poi.title}，终点为环境与测绘学院。`, "success");
+          };
+
+          suggest.appendChild(item);
+        }
+      }).searchNearby(
+        keyword + " " + CAMPUS.name,
+        CUMT_CENTER,
+        1800
+      );
+    }
+
+    async function quickSetStart(name) {
+      try {
+        setStatus(`正在设置起点：${name} ...`);
+
+        const poi = await getPoi(name);
+        startPoi = poi;
+        $("startPoint").value = poi.title;
+
+        refreshRouteMarkers();
+        map.flyTo(poi.point, 17);
+        openInfoWindow(poi);
+
+        setStatus(`起点已设置为：${poi.title}，终点为环境与测绘学院。`, "success");
+      } catch (error) {
+        setStatus(error, "error");
+      }
+    }
+
+    function initRouteService() {
+      walkingRoute = new BMapGL.WalkingRoute(map, {
+        renderOptions: {
+          map: map,
+          autoViewport: true,
+          panel: "routeSteps"
+        },
+        onSearchComplete: (results) => {
+          if (walkingRoute.getStatus() !== BMAP_STATUS_SUCCESS) {
+            $("routeSummary").innerHTML = "";
+            $("routeSteps").innerHTML = "<div class='empty-tip'>未找到可用路线，请检查起点。</div>";
+            setStatus("路径规划失败，请检查起点。", "error");
+            return;
+          }
+
+          const plan = results.getPlan(0);
+
+          $("routeSummary").innerHTML = `
+            <div class="route-summary">
+              <div class="route-summary-title">路线规划成功</div>
+              <div class="route-row">
+                <span>起点</span>
+                <strong>${$("startPoint").value || "已选择起点"}</strong>
+              </div>
+              <div class="route-row">
+                <span>终点</span>
+                <strong>${FIXED_END_NAME}</strong>
+              </div>
+              <div class="route-row">
+                <span>总距离</span>
+                <strong>${plan.getDistance(true)}</strong>
+              </div>
+              <div class="route-row">
+                <span>预计耗时</span>
+                <strong>${plan.getDuration(true)}</strong>
+              </div>
+            </div>
+          `;
+
+          setStatus(`路径规划完成：约 ${plan.getDistance(true)}，预计 ${plan.getDuration(true)}。`, "success");
+        }
+      });
+    }
+
+    async function planRoute() {
+      const startVal = $("startPoint").value.trim();
+
+      if (!startVal) {
+        alert("请输入或选择起点");
+        return;
+      }
+
+      try {
+        showDrawer("到环测学院路线详情");
+        clearDrawerContent();
+
+        setStatus(`正在规划路线：${startVal} → ${FIXED_END_NAME} ...`);
+
+        if (!startPoi || startPoi.title !== startVal) {
+          startPoi = await getPoi(startVal);
+        }
+
+        if (!endPoi) {
+          endPoi = await getPoi(FIXED_END_NAME);
+        }
+
+        refreshRouteMarkers();
+        walkingRoute.search(startPoi.point, endPoi.point);
+      } catch (error) {
+        alert(error);
+        setStatus(error, "error");
+      }
+    }
+
+    function getPoi(name) {
+      return new Promise((resolve, reject) => {
+        createSearch((results) => {
+          if (results && results.getCurrentNumPois() > 0) {
+            resolve(results.getPoi(0));
+          } else {
+            reject("未找到：" + name);
+          }
+        }).searchNearby(
+          name + " " + CAMPUS.name,
+          CUMT_CENTER,
+          1800
+        );
+      });
+    }
+
+    function setStartFromSearch(index) {
+      if (!currentResults) return;
+
+      const poi = currentResults.getPoi(index);
+
+      if (!poi || !poi.point) return;
+
+      startPoi = poi;
+      $("startPoint").value = poi.title;
+
+      refreshRouteMarkers();
+      map.flyTo(poi.point, 18);
+      openInfoWindow(poi);
+
+      setStatus(`起点已设置为：${poi.title}，终点为环境与测绘学院。`, "success");
+    }
+
+    function addMarker(point, title, color) {
+      const marker = new BMapGL.Marker(point);
+      map.addOverlay(marker);
+
+      const label = new BMapGL.Label(title, {
+        offset: new BMapGL.Size(-10, -28)
+      });
+
+      label.setStyle({
+        color: "#ffffff",
+        background: color,
+        border: "none",
+        padding: "4px 8px",
+        borderRadius: "999px",
+        fontSize: "12px",
+        fontWeight: "bold",
+        boxShadow: "0 5px 12px rgba(15,23,42,0.25)"
+      });
+
+      marker.setLabel(label);
+      markers.push(marker);
+
+      return marker;
+    }
+
+    function refreshRouteMarkers() {
+      clearMarkers();
+
+      if (startPoi && startPoi.point) {
+        addMarker(startPoi.point, "起", "#00529b");
+      }
+
+      if (endPoi && endPoi.point) {
+        addMarker(endPoi.point, "终", "#dc2626");
+      }
+    }
+
+    function clearMarkers() {
+      markers.forEach(marker => {
+        map.removeOverlay(marker);
+      });
+
+      markers = [];
+    }
+
+    function openInfoWindow(poi) {
+      const html = `
+        <div style="font-size:13px;line-height:1.7;">
+          <b style="color:#00529b;">${poi.title}</b><br>
+          ${poi.address || "校内地点"}
+        </div>
+      `;
+
+      const info = new BMapGL.InfoWindow(html, {
+        width: 230
+      });
+
+      map.openInfoWindow(info, poi.point);
+    }
+
+    function clearAll() {
+      if (walkingRoute) {
+        walkingRoute.clearResults();
+      }
+
+      clearMarkers();
+      clearDrawerContent();
+      closeDrawer();
+
+      $("searchKeyword").value = "";
+      $("startPoint").value = "";
+      $("startSuggest").innerHTML = "";
+
+      startPoi = null;
+      currentResults = null;
+
+      if (map && CUMT_CENTER) {
+        map.flyTo(CUMT_CENTER, CAMPUS.zoom);
+        map.setTilt(45);
+        addCenterMarker();
+      }
+
+      loadFixedEndPoint();
+
+      setStatus("已清空搜索结果和路径规划，终点仍固定为环境与测绘学院。", "success");
+    }
+
+    function resetCenter() {
+      if (!map || !CUMT_CENTER) return;
+
+      map.flyTo(CUMT_CENTER, CAMPUS.zoom);
+      map.setTilt(45);
+      addCenterMarker();
+
+      setStatus("已回到南湖校区中心视图。", "success");
+    }
+
+    function setMap2D() {
+      if (!map) return;
+
+      map.setTilt(0);
+      setStatus("已切换为二维地图视图。", "success");
+    }
+
+    function setMap3D() {
+      if (!map) return;
+
+      map.setTilt(45);
+      setStatus("已切换为三维地图视图。", "success");
+    }
+
+    function initEvents() {
+      $("searchKeyword").addEventListener("keyup", (e) => {
+        if (e.key === "Enter") searchPOI();
+      });
+
+      $("startPoint").addEventListener("keyup", (e) => {
+        if (e.key === "Enter") searchStartPoint();
+      });
+    }
+  </script>
+</body>
+</html>

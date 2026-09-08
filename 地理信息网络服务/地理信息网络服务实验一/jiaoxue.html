@@ -1,0 +1,379 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>教学内容</title>
+    <style>
+        * {
+            box-sizing: border-box;
+        }
+
+        html {
+            scroll-behavior: smooth;
+        }
+
+        body {
+            margin: 0;
+            font-family: "Microsoft YaHei", Arial, sans-serif;
+            background-image: url('背景.jpg');
+            background-size: cover;
+            background-repeat: no-repeat;
+            background-position: center;
+            background-attachment: fixed;
+            position: relative;
+            color: #333;
+        }
+
+        body::before {
+            content: "";
+            position: fixed;
+            inset: 0;
+            background: rgba(0, 0, 0, 0.35);
+            z-index: -1;
+        }
+
+        .title {
+            text-align: center;
+            color: #ffffff;
+            padding-top: 30px;
+            margin-bottom: 10px;
+            font-size: 42px;
+            letter-spacing: 4px;
+            text-shadow: 3px 3px 10px rgba(0, 0, 0, 0.8);
+        }
+
+        .welcome {
+            text-align: center;
+            color: #fff6d5;
+            font-size: 19px;
+            margin-bottom: 20px;
+            text-shadow: 1px 1px 6px rgba(0, 0, 0, 0.8);
+        }
+
+        .nav-table, .content-table {
+            width: 82%;
+            margin: 22px auto;
+            border-radius: 16px;
+            overflow: hidden;
+            background-color: rgba(255, 255, 255, 0.93);
+            box-shadow: 0 10px 28px rgba(0, 0, 0, 0.22);
+            backdrop-filter: blur(3px);
+        }
+
+        .nav-table {
+            border-collapse: collapse;
+        }
+
+        .nav-table th {
+            border: 1px solid rgba(139, 69, 19, 0.25);
+            padding: 14px 10px;
+            font-size: 17px;
+            background: linear-gradient(180deg, #fff8ef, #f7ead8);
+            transition: all 0.3s ease;
+        }
+
+        .nav-table th:hover {
+            background: linear-gradient(180deg, #f0dcc0, #ead0ad);
+            transform: translateY(-1px);
+        }
+
+        .nav-table a {
+            text-decoration: none;
+            color: #8b4513;
+            font-weight: bold;
+        }
+
+        .nav-table a:hover {
+            color: #b22222;
+        }
+
+        .content-table td {
+            padding: 26px 30px;
+        }
+
+        h2 {
+            color: #8b4513;
+            font-size: 28px;
+            text-align: center;
+            margin-top: 10px;
+            margin-bottom: 18px;
+        }
+
+        h3 {
+            color: #8b4513;
+            font-size: 22px;
+            margin-top: 28px;
+            margin-bottom: 8px;
+            padding-left: 10px;
+            border-left: 5px solid #8b4513;
+        }
+
+        p {
+            text-indent: 2em;
+            line-height: 1.9;
+            font-size: 16px;
+        }
+
+        .img-box {
+            text-align: center;
+            margin: 18px 0 28px 0;
+        }
+
+        .img-box img {
+            width: 600px;
+            max-width: 90%;
+            border-radius: 14px;
+            border: 3px solid #8b4513;
+            box-shadow: 0 8px 20px rgba(0, 0, 0, 0.22);
+            transition: all 0.3s ease;
+        }
+
+        .img-box img:hover {
+            transform: scale(1.02);
+        }
+
+        hr {
+            border: none;
+            height: 2px;
+            background: linear-gradient(to right, transparent, #d1a16a, transparent);
+            margin: 12px auto 18px;
+        }
+
+        .intro-box {
+            background: rgba(245, 236, 223, 0.75);
+            border-left: 6px solid #8b4513;
+            border-radius: 10px;
+            padding: 14px 16px;
+            margin-bottom: 20px;
+            line-height: 1.8;
+        }
+
+        .back-link {
+            text-align: right;
+            margin-top: 24px;
+        }
+
+        .back-link a {
+            text-decoration: none;
+            color: #8b4513;
+            font-weight: bold;
+            padding: 8px 14px;
+            border-radius: 20px;
+            transition: all 0.3s ease;
+            margin-left: 8px;
+        }
+
+        .back-link a:hover {
+            color: white;
+            background-color: #8b4513;
+        }
+
+        .btn-area {
+            text-align: center;
+            margin: 20px 0;
+        }
+
+        button {
+            padding: 10px 22px;
+            font-size: 16px;
+            background: linear-gradient(135deg, #8b4513, #a0522d);
+            color: white;
+            border: none;
+            border-radius: 25px;
+            cursor: pointer;
+            box-shadow: 0 6px 16px rgba(0, 0, 0, 0.22);
+            transition: all 0.3s ease;
+        }
+
+        button:hover {
+            background: linear-gradient(135deg, #a0522d, #b5651d);
+            transform: translateY(-2px) scale(1.02);
+        }
+
+        .tip-box {
+            width: 82%;
+            margin: 0 auto 20px auto;
+            border-radius: 16px;
+            background-color: rgba(255, 255, 255, 0.93);
+            box-shadow: 0 10px 28px rgba(0, 0, 0, 0.22);
+            padding: 16px 24px;
+            color: #5c3317;
+            line-height: 1.8;
+        }
+
+        ul {
+            line-height: 1.9;
+            font-size: 16px;
+            color: #333;
+            padding-left: 28px;
+        }
+
+        li {
+            margin-bottom: 8px;
+        }
+
+        .video-box {
+            text-align: center;
+            margin: 30px 0 10px 0;
+        }
+
+        .video-box iframe {
+            width: 80%;
+            max-width: 800px;
+            height: 450px;
+            border-radius: 14px;
+            border: 3px solid #8b4513;
+            box-shadow: 0 8px 20px rgba(0, 0, 0, 0.22);
+            background-color: #000;
+        }
+
+        @media screen and (max-width: 768px) {
+            .title {
+                font-size: 30px;
+            }
+
+            .welcome {
+                font-size: 16px;
+            }
+
+            .nav-table, .content-table, .tip-box {
+                width: 94%;
+            }
+
+            .nav-table th {
+                font-size: 14px;
+                padding: 10px 6px;
+            }
+
+            .content-table td {
+                padding: 18px 16px;
+            }
+
+            h2 {
+                font-size: 24px;
+            }
+
+            h3 {
+                font-size: 19px;
+            }
+
+            p, ul {
+                font-size: 15px;
+            }
+
+            .video-box iframe {
+                width: 95%;
+                height: 240px;
+            }
+        }
+    </style>
+</head>
+<body>
+    <a id="top"></a>
+
+    <h1 class="title">教学内容</h1>
+    <p class="welcome">欢迎来到射箭教学内容介绍页面</p>
+
+    <table class="nav-table">
+        <tr align="center">
+            <th><a href="#jiben">基本动作</a></th>
+            <th><a href="#liucheng">训练流程</a></th>
+            <th><a href="#anquan">安全教育</a></th>
+            <th><a href="#xinli">心理训练</a></th>
+            <th><a href="#shipin">教学视频</a></th>
+        </tr>
+    </table>
+
+    <div class="btn-area">
+        <button onclick="showTip()">点击了解教学小知识</button>
+    </div>
+
+    <div class="tip-box" id="tipBox">
+        点击上方按钮，可以随机查看一条与射箭教学相关的小知识。
+    </div>
+
+    <table class="content-table">
+        <tr>
+            <td>
+                <h2>教学介绍</h2>
+                <hr>
+
+                <div class="intro-box">
+                    射箭教学不仅重视技术动作的规范性，也强调训练方法、安全意识和心理素质的培养，是一项综合性很强的教学过程。
+                </div>
+
+                <h3 id="jiben">基本动作</h3>
+                <p>
+                    射箭教学的首要内容是学习基本动作，包括站姿、握弓、搭箭、扣弦、举弓、开弓、瞄准、撒放和收势等环节。初学者通常先从规范站姿开始，要求身体保持平衡，双脚位置稳定，确保发力和瞄准时不易晃动。随后再逐步学习上箭、拉弓与放箭动作，使整套动作形成连贯而自然的过程。
+                </p>
+                <p>
+                    在这一阶段，教师通常会重点纠正学员的错误动作，例如耸肩、握弓过紧、开弓不稳、放箭时手部动作过大等问题。通过反复练习，学员可以逐步形成正确的动作习惯，提高射击的准确性和稳定性。
+                </p>
+
+                <h3 id="liucheng">训练流程</h3>
+                <p>
+                    射箭训练通常遵循由浅入深、循序渐进的原则。初学阶段主要是熟悉器材和基本动作，中级阶段会加强瞄准、动作连贯性和命中率训练，高级阶段则更加关注技术细节、比赛节奏和稳定发挥。训练中通常会安排热身活动、动作练习、靶上训练和课后总结等环节。
+                </p>
+                <ul>
+                    <li>热身准备：活动肩部、手臂和腰背，防止运动损伤。</li>
+                    <li>动作训练：反复练习站姿、开弓和撒放动作。</li>
+                    <li>靶上练习：在规定距离上进行实际射击训练。</li>
+                    <li>总结纠正：针对训练中出现的问题进行分析和改进。</li>
+                </ul>
+
+                <h3 id="anquan">安全教育</h3>
+                <p>
+                    安全教育是射箭教学中不可缺少的重要内容。由于弓箭具有一定危险性，教学时必须严格遵守场地规则和统一指令。学员要明确知道什么时候可以射箭、什么时候可以拔箭，以及如何正确使用器材和护具。任何情况下都不得将箭对准他人，也不得在无人监管时随意操作弓箭。
+                </p>
+                <p>
+                    教学中还会强调护具的正确佩戴，例如护臂、护胸和指套等，这些器具能够有效减少弓弦回弹和摩擦带来的伤害。通过系统的安全教育，能够帮助学员建立规范意识，保障训练顺利进行。
+                </p>
+
+                <h3 id="xinli">心理训练</h3>
+                <p>
+                    射箭是一项对心理状态要求较高的运动，因此教学内容中也包括心理训练。学员需要在射箭过程中保持冷静、专注和稳定，避免因紧张、急躁或注意力分散影响发挥。教师往往会通过呼吸调整、节奏控制和比赛模拟等方法，帮助学员增强自我调节能力。
+                </p>
+                <p>
+                    通过长期训练，射箭不仅能够提高身体协调能力，也能够培养耐心、专注和自我控制能力。这也是射箭教学区别于一般体育教学的重要特点之一。
+                </p>
+
+                <h3 id="shipin">传统弓教学视频</h3>
+                <p>
+                    下面的视频可用于展示射箭教学的实际过程，例如站姿示范、搭箭动作、开弓过程以及撒放技巧等内容。通过文字与视频结合，可以更直观地理解射箭教学的核心步骤。
+                </p>
+
+                <div class="video-box">
+                    <iframe
+                        src="https://player.bilibili.com/player.html?bvid=BV1Rb8jzaEPT&p=1"
+                        title="射箭教学视频"
+                        scrolling="no"
+                        border="0"
+                        frameborder="no"
+                        framespacing="0"
+                        allowfullscreen="true">
+                    </iframe>
+                </div>
+
+                <p class="back-link">
+                    <a href="#top">返回顶部</a>
+                </p>
+            </td>
+        </tr>
+    </table>
+
+    <script>
+        function showTip() {
+            var tips = [
+                "教学小知识：初学者应先练动作规范，再追求高环数。",
+                "教学小知识：稳定的站姿是射箭教学中的基础内容之一。",
+                "教学小知识：安全教育是射箭教学中最重要的环节之一。",
+                "教学小知识：射箭训练不仅练技术，也训练专注力和心理素质。",
+                "教学小知识：规范使用护具可以有效降低训练中的受伤风险。"
+            ];
+            var randomIndex = Math.floor(Math.random() * tips.length);
+            document.getElementById("tipBox").innerHTML = tips[randomIndex];
+        }
+    </script>
+</body>
+</html>

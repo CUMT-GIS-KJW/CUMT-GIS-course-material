@@ -1,0 +1,327 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>射箭历史</title>
+    <style>
+        * {
+            box-sizing: border-box;
+        }
+
+        html {
+            scroll-behavior: smooth;
+        }
+
+        body {
+            margin: 0;
+            font-family: "Microsoft YaHei", Arial, sans-serif;
+            background-image: url('背景.jpg');
+            background-size: cover;
+            background-repeat: no-repeat;
+            background-position: center;
+            background-attachment: fixed;
+            position: relative;
+            color: #333;
+        }
+
+        body::before {
+            content: "";
+            position: fixed;
+            inset: 0;
+            background: rgba(0, 0, 0, 0.35);
+            z-index: -1;
+        }
+
+        .title {
+            text-align: center;
+            color: #ffffff;
+            padding-top: 30px;
+            margin-bottom: 10px;
+            font-size: 42px;
+            letter-spacing: 4px;
+            text-shadow: 3px 3px 10px rgba(0, 0, 0, 0.8);
+        }
+
+        .welcome {
+            text-align: center;
+            color: #fff6d5;
+            font-size: 19px;
+            margin-bottom: 20px;
+            text-shadow: 1px 1px 6px rgba(0, 0, 0, 0.8);
+        }
+
+        .nav-table, .content-table {
+            width: 82%;
+            margin: 22px auto;
+            border-radius: 16px;
+            overflow: hidden;
+            background-color: rgba(255, 255, 255, 0.93);
+            box-shadow: 0 10px 28px rgba(0, 0, 0, 0.22);
+            backdrop-filter: blur(3px);
+        }
+
+        .nav-table {
+            border-collapse: collapse;
+        }
+
+        .nav-table th {
+            border: 1px solid rgba(139, 69, 19, 0.25);
+            padding: 14px 10px;
+            font-size: 17px;
+            background: linear-gradient(180deg, #fff8ef, #f7ead8);
+            transition: all 0.3s ease;
+        }
+
+        .nav-table th:hover {
+            background: linear-gradient(180deg, #f0dcc0, #ead0ad);
+            transform: translateY(-1px);
+        }
+
+        .nav-table a {
+            text-decoration: none;
+            color: #8b4513;
+            font-weight: bold;
+        }
+
+        .nav-table a:hover {
+            color: #b22222;
+        }
+
+        .content-table td {
+            padding: 26px 30px;
+        }
+
+        h2 {
+            color: #8b4513;
+            font-size: 28px;
+            text-align: center;
+            margin-top: 10px;
+            margin-bottom: 18px;
+        }
+
+        h3 {
+            color: #8b4513;
+            font-size: 22px;
+            margin-top: 28px;
+            margin-bottom: 8px;
+            padding-left: 10px;
+            border-left: 5px solid #8b4513;
+        }
+
+        p {
+            text-indent: 2em;
+            line-height: 1.9;
+            font-size: 16px;
+        }
+
+        .img-box {
+            text-align: center;
+            margin: 18px 0 28px 0;
+        }
+
+        .img-box img {
+            width: 600px;
+            max-width: 90%;
+            border-radius: 14px;
+            border: 3px solid #8b4513;
+            box-shadow: 0 8px 20px rgba(0, 0, 0, 0.22);
+            transition: all 0.3s ease;
+        }
+
+        .img-box img:hover {
+            transform: scale(1.02);
+        }
+
+        hr {
+            border: none;
+            height: 2px;
+            background: linear-gradient(to right, transparent, #d1a16a, transparent);
+            margin: 12px auto 18px;
+        }
+
+        .intro-box {
+            background: rgba(245, 236, 223, 0.75);
+            border-left: 6px solid #8b4513;
+            border-radius: 10px;
+            padding: 14px 16px;
+            margin-bottom: 20px;
+            line-height: 1.8;
+        }
+
+        .back-link {
+            text-align: right;
+            margin-top: 24px;
+        }
+
+        .back-link a {
+            text-decoration: none;
+            color: #8b4513;
+            font-weight: bold;
+            padding: 8px 14px;
+            border-radius: 20px;
+            transition: all 0.3s ease;
+            margin-left: 8px;
+        }
+
+        .back-link a:hover {
+            color: white;
+            background-color: #8b4513;
+        }
+
+        .btn-area {
+            text-align: center;
+            margin: 20px 0;
+        }
+
+        button {
+            padding: 10px 22px;
+            font-size: 16px;
+            background: linear-gradient(135deg, #8b4513, #a0522d);
+            color: white;
+            border: none;
+            border-radius: 25px;
+            cursor: pointer;
+            box-shadow: 0 6px 16px rgba(0, 0, 0, 0.22);
+            transition: all 0.3s ease;
+        }
+
+        button:hover {
+            background: linear-gradient(135deg, #a0522d, #b5651d);
+            transform: translateY(-2px) scale(1.02);
+        }
+
+        .tip-box {
+            width: 82%;
+            margin: 0 auto 20px auto;
+            border-radius: 16px;
+            background-color: rgba(255, 255, 255, 0.93);
+            box-shadow: 0 10px 28px rgba(0, 0, 0, 0.22);
+            padding: 16px 24px;
+            color: #5c3317;
+            line-height: 1.8;
+        }
+
+        @media screen and (max-width: 768px) {
+            .title {
+                font-size: 30px;
+            }
+
+            .welcome {
+                font-size: 16px;
+            }
+
+            .nav-table, .content-table, .tip-box {
+                width: 94%;
+            }
+
+            .nav-table th {
+                font-size: 14px;
+                padding: 10px 6px;
+            }
+
+            .content-table td {
+                padding: 18px 16px;
+            }
+
+            h2 {
+                font-size: 24px;
+            }
+
+            h3 {
+                font-size: 19px;
+            }
+
+            p {
+                font-size: 15px;
+            }
+        }
+    </style>
+</head>
+<body>
+    <a id="top"></a>
+
+    <h1 class="title">射箭历史</h1>
+    <p class="welcome">欢迎来到射箭历史介绍页面</p>
+
+    <table class="nav-table">
+        <tr align="center">
+            <th><a href="#qiyuan">起源</a></th>
+            <th><a href="#zhongguo">中国古代射箭</a></th>
+            <th><a href="#xiandai">现代射箭运动</a></th>
+            <th><a href="#fazhan">发展意义</a></th>
+        </tr>
+    </table>
+
+    <div class="btn-area">
+        <button onclick="showTip()">点击了解历史小知识</button>
+    </div>
+
+    <div class="tip-box" id="tipBox">
+        点击上方按钮，可以随机查看一条与射箭历史相关的小知识。
+    </div>
+
+    <table class="content-table">
+        <tr>
+            <td>
+                <h2>历史介绍</h2>
+                <hr>
+
+                <div class="intro-box">
+                    射箭是人类最古老的技艺之一，经历了从生产生活工具到军事武器，再到现代竞技体育项目的发展过程。
+                </div>
+
+                <h3 id="qiyuan">起源</h3>
+                <p>
+                    射箭起源于远古时期，最初是人类在狩猎活动中创造和使用的一种生存技能。由于弓箭能够在较远距离攻击猎物，因此在原始社会中具有十分重要的地位。随着部落之间冲突的增加，弓箭又逐渐从狩猎工具演变为战争武器，在人类文明发展史上产生了深远影响。
+                </p>
+
+                <h3 id="zhongguo">中国古代射箭</h3>
+                <p>
+                    在中国，射箭有着非常悠久的历史。早在先秦时期，射箭就已经成为军事训练和礼仪教育的重要组成部分。儒家“六艺”中的“射”便体现了射箭在古代文化中的重要地位。古人认为，射箭不仅是一种技术，更是一种修身养性的方式，通过练习射箭可以培养专注、礼仪和自我约束能力。
+                </p>
+                <p>
+                    到了春秋战国及其后期，弓箭在战争中广泛使用，射术水平直接关系到军队战斗力。与此同时，射箭也逐渐从军事层面进入礼仪和竞技层面，形成了兼具实用性与文化性的传统射艺。
+                </p>
+                <div class="img-box">
+                    <img src="中国古代射箭.jpg" alt="中国古代射箭图片">
+                </div>
+
+                <h3 id="xiandai">现代射箭运动</h3>
+                <p>
+                    随着火器的普及，弓箭在战争中的作用逐渐减弱，但射箭并没有消失，而是逐步演变为一项体育运动。现代射箭在规则、器材和比赛方式上更加规范化，形成了竞技反曲弓、复合弓等多种项目。1900年，射箭首次进入现代奥运会，后来经过一段中断，于1972年重新成为奥运会正式比赛项目。
+                </p>
+                <p>
+                    今天的射箭运动已经成为一项国际化程度很高的体育项目，世界各地举办了大量专业比赛和群众性活动。现代射箭不仅强调技术精度，也重视心理稳定、动作规范和比赛礼仪。
+                </p>
+                <div class="img-box">
+                    <img src="现代射箭.jpg" alt="现代射箭图片">
+                </div>
+
+                <h3 id="fazhan">发展意义</h3>
+                <p>
+                    射箭从古代生产和战争工具发展为现代体育运动，体现了人类文明与技术进步的过程。如今，射箭既保留了传统文化底蕴，又融入了现代竞技精神，具有体育锻炼、文化传承和心理训练等多重价值。通过了解射箭历史，人们不仅能够认识这项运动的发展脉络，也能更深入地体会其中蕴含的文化魅力。
+                </p>
+
+                <p class="back-link">
+                    <a href="#top">返回顶部</a>
+                </p>
+            </td>
+        </tr>
+    </table>
+
+    <script>
+        function showTip() {
+            var tips = [
+                "历史小知识：射箭最早是远古人类的重要狩猎工具。",
+                "历史小知识：中国古代将“射”列入六艺之一。",
+                "历史小知识：弓箭曾长期是古代战争中的重要武器。",
+                "历史小知识：射箭在1900年首次进入现代奥运会。",
+                "历史小知识：现代射箭运动强调技术、心理与礼仪的统一。"
+            ];
+            var randomIndex = Math.floor(Math.random() * tips.length);
+            document.getElementById("tipBox").innerHTML = tips[randomIndex];
+        }
+    </script>
+</body>
+</html>

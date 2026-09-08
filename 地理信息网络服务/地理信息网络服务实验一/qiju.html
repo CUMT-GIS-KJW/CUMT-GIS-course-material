@@ -1,0 +1,306 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>射箭器具</title>
+    <style>
+        * {
+            box-sizing: border-box;
+        }
+
+        html {
+            scroll-behavior: smooth;
+        }
+
+        body {
+            margin: 0;
+            font-family: "Microsoft YaHei", Arial, sans-serif;
+            background-image: url('背景.jpg');
+            background-size: cover;
+            background-repeat: no-repeat;
+            background-position: center;
+            background-attachment: fixed;
+            position: relative;
+            color: #333;
+        }
+
+        body::before {
+            content: "";
+            position: fixed;
+            inset: 0;
+            background: rgba(0, 0, 0, 0.35);
+            z-index: -1;
+        }
+
+        .title {
+            text-align: center;
+            color: #ffffff;
+            padding-top: 30px;
+            margin-bottom: 10px;
+            font-size: 42px;
+            letter-spacing: 4px;
+            text-shadow: 3px 3px 10px rgba(0, 0, 0, 0.8);
+        }
+
+        .welcome {
+            text-align: center;
+            color: #fff6d5;
+            font-size: 19px;
+            margin-bottom: 20px;
+            text-shadow: 1px 1px 6px rgba(0, 0, 0, 0.8);
+        }
+
+        .nav-table, .content-table {
+            width: 82%;
+            margin: 22px auto;
+            border-radius: 16px;
+            overflow: hidden;
+            background-color: rgba(255, 255, 255, 0.93);
+            box-shadow: 0 10px 28px rgba(0, 0, 0, 0.22);
+            backdrop-filter: blur(3px);
+        }
+
+        .nav-table {
+            border-collapse: collapse;
+        }
+
+        .nav-table th {
+            border: 1px solid rgba(139, 69, 19, 0.25);
+            padding: 14px 10px;
+            font-size: 17px;
+            background: linear-gradient(180deg, #fff8ef, #f7ead8);
+            transition: all 0.3s ease;
+        }
+
+        .nav-table th:hover {
+            background: linear-gradient(180deg, #f0dcc0, #ead0ad);
+            transform: translateY(-1px);
+        }
+
+        .nav-table a {
+            text-decoration: none;
+            color: #8b4513;
+            font-weight: bold;
+        }
+
+        .nav-table a:hover {
+            color: #b22222;
+        }
+
+        .content-table td {
+            padding: 26px 30px;
+        }
+
+        h2 {
+            color: #8b4513;
+            font-size: 28px;
+            text-align: center;
+            margin-top: 10px;
+            margin-bottom: 18px;
+        }
+
+        h3 {
+            color: #8b4513;
+            font-size: 22px;
+            margin-top: 28px;
+            margin-bottom: 8px;
+            padding-left: 10px;
+            border-left: 5px solid #8b4513;
+        }
+
+        p {
+            text-indent: 2em;
+            line-height: 1.9;
+            font-size: 16px;
+        }
+
+        .sub-title {
+            color: black;
+            text-indent: 2em;
+            border-left: none;
+            padding-left: 0;
+            font-size: 21px;
+            font-weight: bold;
+            margin-top: 22px;
+        }
+
+        .img-box {
+            text-align: center;
+            margin: 18px 0 28px 0;
+        }
+
+        .img-box img {
+            width: 600px;
+            max-width: 90%;
+            border-radius: 14px;
+            border: 3px solid #8b4513;
+            box-shadow: 0 8px 20px rgba(0, 0, 0, 0.22);
+            transition: all 0.3s ease;
+        }
+
+        .img-box img:hover {
+            transform: scale(1.02);
+        }
+
+        hr {
+            border: none;
+            height: 2px;
+            background: linear-gradient(to right, transparent, #d1a16a, transparent);
+            margin: 12px auto 18px;
+        }
+
+        .intro-box {
+            background: rgba(245, 236, 223, 0.75);
+            border-left: 6px solid #8b4513;
+            border-radius: 10px;
+            padding: 14px 16px;
+            margin-bottom: 20px;
+            line-height: 1.8;
+        }
+
+        .back-link {
+            text-align: right;
+            margin-top: 24px;
+        }
+
+        .back-link a {
+            text-decoration: none;
+            color: #8b4513;
+            font-weight: bold;
+            padding: 8px 14px;
+            border-radius: 20px;
+            transition: all 0.3s ease;
+            margin-left: 8px;
+        }
+
+        .back-link a:hover {
+            color: white;
+            background-color: #8b4513;
+        }
+
+        @media screen and (max-width: 768px) {
+            .title {
+                font-size: 30px;
+            }
+
+            .welcome {
+                font-size: 16px;
+            }
+
+            .nav-table, .content-table {
+                width: 94%;
+            }
+
+            .nav-table th {
+                font-size: 14px;
+                padding: 10px 6px;
+            }
+
+            .content-table td {
+                padding: 18px 16px;
+            }
+
+            h2 {
+                font-size: 24px;
+            }
+
+            h3 {
+                font-size: 19px;
+            }
+
+            .sub-title {
+                font-size: 18px;
+            }
+
+            p {
+                font-size: 15px;
+            }
+        }
+    </style>
+</head>
+<body>
+    <a id="top"></a>
+
+    <h1 class="title">射箭器具</h1>
+    <p class="welcome">欢迎来到射箭器具介绍页面</p>
+
+    <table class="nav-table">
+        <tr align="center">
+            <th><a href="#gong">弓</a></th>
+            <th><a href="#jian">箭</a></th>
+            <th><a href="#jianba">箭靶</a></th>
+            <th><a href="#huju">护具</a></th>
+        </tr>
+    </table>
+
+    <table class="content-table">
+        <tr>
+            <td>
+                <h2>器具介绍</h2>
+                <hr>
+
+                <div class="intro-box">
+                    射箭器具是射箭运动的重要基础，不同器具在训练、比赛和安全保障中承担着不同作用。
+                </div>
+
+                <h3 id="gong">弓</h3>
+                <p>
+                    弓是射箭运动中最核心的器具，常见种类有竞技反曲弓、美式猎弓、传统弓和复合弓。不同类型的弓在结构、使用方式和适用场景上各有特点。
+                </p>
+
+                <h3 class="sub-title">竞技反曲弓</h3>
+                <p>
+                    竞技反曲弓是现代奥运会和国际正式比赛中最常见的弓种，结构规范，稳定性较好。它的弓臂末端向外反曲，这种设计能够在拉弓时储存更多能量，从而提高射箭的速度和精度。竞技反曲弓通常会配备瞄准器、平衡杆等附件，适合用于专业训练和比赛。
+                </p>
+                <div class="img-box">
+                    <img src="竞技反曲弓.webp" alt="竞技反曲弓图片">
+                </div>
+
+                <h3 class="sub-title">美式猎弓</h3>
+                <p>
+                    美式猎弓主要用于狩猎和野外射箭活动，强调力量、便携性和实用性。这类弓通常结构较紧凑，便于在复杂环境中操作，具有较强的穿透力和较好的射程表现。随着射箭运动的发展，美式猎弓也逐渐被部分爱好者用于休闲体验和专项训练。
+                </p>
+
+                <h3 class="sub-title">传统弓</h3>
+                <p>
+                    传统弓是历史最悠久的一类弓，具有鲜明的文化特色和传统工艺特点。它通常不依赖现代瞄准装置，更强调射手对动作、力量和手感的控制。传统弓不仅是一种射箭器具，也承载着不同地区的历史文化内涵，在中国传统射艺、日本弓道等项目中都具有重要地位。
+                </p>
+                <div class="img-box">
+                    <img src="传统弓.jpg" alt="传统弓图片">
+                </div>
+
+                <h3 class="sub-title">复合弓</h3>
+                <p>
+                    复合弓是在现代材料和机械结构基础上发展起来的一种弓，最显著的特点是装有滑轮系统。滑轮结构能够减轻射手在拉满弓时所需维持的力量，使瞄准过程更加稳定。复合弓具有较高的精度、较强的威力和较好的射程，因此广泛应用于训练、比赛及部分狩猎活动中。
+                </p>
+                <div class="img-box">
+                    <img src="复合弓.jpg" alt="复合弓图片">
+                </div>
+
+                <h3 id="jian">箭</h3>
+                <p>
+                    箭通常由箭杆、箭头、箭羽和箭尾组成。箭的材质和长度会根据训练要求和比赛项目有所不同，在现代箭杆根据材料可分为木质箭、碳纤维箭等，合适的箭有助于提高射击的稳定性和准确性。
+                </p>
+
+                <h3 id="jianba">箭靶</h3>
+                <p>
+                    箭靶通常由多个不同颜色的同心圆环组成，每个圆环对应不同的分数。射手命中越靠近中心的位置，所得分数越高。
+                </p>
+
+                <h3 id="huju">护具</h3>
+                <p>
+                    护具主要包括护臂、护胸和指套等，用于减少射箭过程中弓弦回弹或摩擦带来的伤害，保证训练和比赛安全。根据弓种不同，护具的设计和使用方法也有所差异，传统弓一般使用扳指，每个朝代的扳指形制也有所不同，而现代竞技弓和复合弓则多使用指套或机械释放器。
+                </p>
+                <div class="img-box">
+                    <img src="明四捷机.jpg" alt="扳指图片">
+                </div>
+
+                <p class="back-link">
+                    <a href="#top">返回顶部</a>
+                </p>
+            </td>
+        </tr>
+    </table>
+</body>
+</html>

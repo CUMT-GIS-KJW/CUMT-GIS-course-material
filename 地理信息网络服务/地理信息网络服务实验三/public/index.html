@@ -1,0 +1,104 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>简易留言板</title>
+  <link rel="stylesheet" href="/styles.css">
+</head>
+<body>
+  <main class="app-shell">
+    <aside class="sidebar">
+      <section class="brand-section">
+        <div class="brand-mark">留</div>
+        <h1>简易留言板</h1>
+        <p class="subtle">地理信息网络服务实验三</p>
+      </section>
+
+      <section class="status-section" aria-label="系统状态">
+        <div class="status-line" id="dbStatus">
+          <span class="status-dot"></span>
+          <span id="dbStatusText">正在检查数据库连接...</span>
+        </div>
+        <div class="stat-grid">
+          <div class="stat-item">
+            <span id="statUsers">0</span>
+            <small>用户</small>
+          </div>
+          <div class="stat-item">
+            <span id="statMessages">0</span>
+            <small>留言</small>
+          </div>
+          <div class="stat-item">
+            <span id="statReplies">0</span>
+            <small>评论</small>
+          </div>
+        </div>
+      </section>
+
+      <section class="auth-panel" id="authPanel">
+        <div class="tabs" role="tablist" aria-label="账号操作">
+          <button class="tab active" id="loginTab" type="button">登录</button>
+          <button class="tab" id="registerTab" type="button">注册</button>
+        </div>
+
+        <form class="auth-form" id="authForm">
+          <label>
+            <span>用户名</span>
+            <input id="username" name="username" type="text" placeholder="3-20 位用户名" autocomplete="username" required>
+          </label>
+          <label>
+            <span>密码</span>
+            <input id="password" name="password" type="password" placeholder="至少 6 位密码" autocomplete="current-password" required>
+          </label>
+          <button class="primary-btn" id="authSubmit" type="submit">登录</button>
+        </form>
+        <p class="notice" id="authNotice"></p>
+      </section>
+
+      <section class="account-panel hidden" id="accountPanel">
+        <p class="subtle">当前登录</p>
+        <div class="account-row">
+          <strong id="currentUser">-</strong>
+          <button class="ghost-btn" type="button" id="logoutBtn">退出</button>
+        </div>
+      </section>
+    </aside>
+
+    <section class="board">
+      <header class="board-header">
+        <div>
+          <h2>留言列表</h2>
+          <p class="board-summary" id="boardSummary">共 0 条留言</p>
+        </div>
+        <button class="icon-btn" type="button" id="refreshBtn" title="刷新">刷新</button>
+      </header>
+
+      <form class="message-form hidden" id="messageForm">
+        <textarea id="messageContent" maxlength="500" rows="4" placeholder="写下你的留言..." required></textarea>
+        <div class="form-footer">
+          <span id="messageCounter">0 / 500</span>
+          <button class="primary-btn compact" type="submit">发布留言</button>
+        </div>
+      </form>
+
+      <div class="toolbar">
+        <label class="search-box">
+          <span>搜索</span>
+          <input id="searchInput" type="search" placeholder="用户名或留言内容">
+        </label>
+        <div class="segmented" role="group" aria-label="留言筛选">
+          <button class="segment active" type="button" data-filter="all">全部</button>
+          <button class="segment" type="button" data-filter="mine">我的参与</button>
+        </div>
+      </div>
+
+      <div class="message-list" id="messageList"></div>
+    </section>
+  </main>
+
+  <div class="toast hidden" id="toast"></div>
+
+  <script src="/app.js"></script>
+</body>
+</html>

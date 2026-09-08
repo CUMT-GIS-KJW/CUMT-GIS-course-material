@@ -1,0 +1,126 @@
+<!doctype html>
+<html lang="zh-CN">
+  <head>
+    <meta charset="utf-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1" />
+    <title>基于 OpenLayers 的 WebGIS 功能开发</title>
+    <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/ol@v10.3.1/ol.css" />
+    <link rel="stylesheet" href="./css/style.css?v=20260522-1" />
+  </head>
+  <body>
+    <header class="app-header">
+      <div class="brand">
+        <span class="brand-mark" aria-hidden="true"></span>
+        <div>
+          <h1>OpenLayers WebGIS 实验系统</h1>
+          <p>公共底图 · EPSG:3857 · GeoServer WFS</p>
+        </div>
+      </div>
+      <div id="system-status" class="status-pill">待连接 GeoServer</div>
+    </header>
+
+    <main class="app-shell">
+      <aside class="sidebar" aria-label="地图控制面板">
+        <section class="panel-section">
+          <div class="section-title">
+            <h2>底图</h2>
+          </div>
+          <div id="basemap-list" class="option-list"></div>
+        </section>
+
+        <section class="panel-section">
+          <div class="section-title">
+            <h2>GeoServer</h2>
+          </div>
+          <form id="geoserver-form" class="form-grid">
+            <label>
+              服务地址
+              <input id="geoserver-base-url" name="baseUrl" type="text" required />
+            </label>
+            <label>
+              工作区
+              <input id="geoserver-workspace" name="workspace" type="text" />
+            </label>
+            <label>
+              图层名
+              <input id="geoserver-layer" name="layerName" type="text" required />
+            </label>
+            <label>
+              显示名称
+              <input id="geoserver-layer-title" name="layerTitle" type="text" />
+            </label>
+            <label>
+              查询字段
+              <input id="geoserver-query-field" name="queryField" type="text" />
+            </label>
+            <button class="primary-action" type="submit">连接图层</button>
+          </form>
+        </section>
+
+        <section class="panel-section">
+          <div class="section-title">
+            <h2>专题图层</h2>
+          </div>
+          <div id="overlay-list" class="overlay-list"></div>
+          <label class="range-row">
+            <span>透明度</span>
+            <input id="overlay-opacity" type="range" min="0" max="1" step="0.05" value="0.8" />
+            <output id="overlay-opacity-value">80%</output>
+          </label>
+          <div class="drag-controls">
+            <button id="toggle-layer-drag" type="button" aria-pressed="false">拖动图层</button>
+            <button id="reset-layer-offset" type="button">复位偏移</button>
+          </div>
+          <div id="layer-offset-value" class="drag-offset-value">X 0 m / Y 0 m</div>
+        </section>
+
+        <section class="panel-section">
+          <div class="section-title">
+            <h2>空间查询</h2>
+          </div>
+          <label class="form-label">
+            查询图层
+            <select id="query-layer-select"></select>
+          </label>
+          <label class="switch-row">
+            <input id="click-query-enabled" type="checkbox" checked />
+            <span>地图查属性</span>
+          </label>
+          <div class="query-row">
+            <input id="attribute-keyword" type="search" placeholder="输入属性关键字" />
+            <button id="attribute-query" type="button">查询</button>
+          </div>
+          <div class="action-row">
+            <button id="zoom-to-results" type="button">定位结果</button>
+            <button id="clear-results" type="button">清除</button>
+          </div>
+        </section>
+
+        <section class="panel-section results-section">
+          <div class="section-title">
+            <h2>结果</h2>
+            <span id="result-count">0</span>
+          </div>
+          <div id="result-list" class="result-list"></div>
+        </section>
+      </aside>
+
+      <section class="map-stage" aria-label="地图窗口">
+        <div id="map" class="map"></div>
+        <div class="map-tools">
+          <button id="home-view" type="button" title="回到初始范围" aria-label="回到初始范围">⌂</button>
+          <button id="clear-popup" type="button" title="关闭弹窗" aria-label="关闭弹窗">×</button>
+        </div>
+        <div id="mouse-position" class="mouse-position"></div>
+        <div id="popup" class="popup">
+          <button id="popup-closer" class="popup-closer" type="button" aria-label="关闭">×</button>
+          <div id="popup-content"></div>
+        </div>
+      </section>
+    </main>
+
+    <script src="https://cdn.jsdelivr.net/npm/ol@v10.3.1/dist/ol.js"></script>
+    <script src="./js/config.js?v=20260522-1"></script>
+    <script src="./js/app.js?v=20260522-1"></script>
+  </body>
+</html>

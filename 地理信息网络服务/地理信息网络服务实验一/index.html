@@ -1,0 +1,382 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>射箭文化</title>
+    <style>
+        * {
+            box-sizing: border-box;
+        }
+
+        html {
+            scroll-behavior: smooth;
+        }
+
+        body {
+            margin: 0;
+            font-family: "Microsoft YaHei", Arial, sans-serif;
+            position: relative;
+            color: #333;
+            overflow-x: hidden;
+        }
+
+        /* 整张背景图 */
+        .bg-img {
+            position: fixed;
+            top: 0;
+            left: 0;
+            height: 100vh;
+            width: auto;
+            min-width: 120%;
+            z-index: -2;
+            animation: imgMove 6s linear infinite alternate;
+        }
+
+        /* 遮罩层 */
+        body::before {
+            content: "";
+            position: fixed;
+            inset: 0;
+            background: rgba(0, 0, 0, 0.35);
+            z-index: -1;
+        }
+
+        /* 让整张图左右滑动 */
+        @keyframes imgMove {
+            0% {
+                transform: translateX(0);
+            }
+            100% {
+                transform: translateX(-200px);
+            }
+        }
+
+        p {
+            text-indent: 2em;
+            line-height: 1.9;
+            font-size: 16px;
+        }
+
+        .title {
+            text-align: center;
+            color: #ffffff;
+            padding-top: 30px;
+            margin-bottom: 10px;
+            font-size: 42px;
+            letter-spacing: 4px;
+            text-shadow: 3px 3px 10px rgba(0, 0, 0, 0.8);
+        }
+
+        .welcome {
+            text-align: center;
+            color: #fff6d5;
+            font-size: 19px;
+            margin-bottom: 8px;
+            text-shadow: 1px 1px 6px rgba(0, 0, 0, 0.8);
+        }
+
+        .time-box {
+            text-align: center;
+            color: #ffffff;
+            font-size: 15px;
+            margin-bottom: 20px;
+            text-shadow: 1px 1px 5px rgba(0, 0, 0, 0.8);
+        }
+
+        .nav-table, .content-table, .tip-box {
+            width: 82%;
+            margin: 22px auto;
+            border-radius: 16px;
+            overflow: hidden;
+            background-color: rgba(255, 255, 255, 0.93);
+            box-shadow: 0 10px 28px rgba(0, 0, 0, 0.22);
+        }
+
+        .nav-table {
+            border-collapse: collapse;
+        }
+
+        .nav-table th {
+            border: 1px solid rgba(139, 69, 19, 0.25);
+            padding: 14px 10px;
+            font-size: 17px;
+            background: linear-gradient(180deg, #fff8ef, #f7ead8);
+            transition: all 0.3s ease;
+        }
+
+        .nav-table th:hover {
+            background: linear-gradient(180deg, #f0dcc0, #ead0ad);
+            transform: translateY(-1px);
+        }
+
+        .nav-table a {
+            text-decoration: none;
+            color: #8b4513;
+            font-weight: bold;
+        }
+
+        .nav-table a:hover {
+            color: #b22222;
+        }
+
+        .content-table td {
+            padding: 26px 30px;
+        }
+
+        .tip-box {
+            padding: 16px 24px;
+            color: #5c3317;
+            font-size: 16px;
+            line-height: 1.8;
+        }
+
+        h2 {
+            color: #8b4513;
+            font-size: 28px;
+            text-align: center;
+            margin-top: 10px;
+            margin-bottom: 18px;
+        }
+
+        h3 {
+            color: #8b4513;
+            font-size: 22px;
+            margin-top: 28px;
+            margin-bottom: 8px;
+            padding-left: 10px;
+            border-left: 5px solid #8b4513;
+        }
+
+        h3 a {
+            color: #8b4513;
+            text-decoration: none;
+        }
+
+        h3 a:hover {
+            color: #b22222;
+        }
+
+        .btn-area {
+            text-align: center;
+            margin: 24px 0;
+        }
+
+        button {
+            padding: 12px 24px;
+            font-size: 16px;
+            background: linear-gradient(135deg, #8b4513, #a0522d);
+            color: white;
+            border: none;
+            border-radius: 30px;
+            cursor: pointer;
+            box-shadow: 0 6px 16px rgba(0, 0, 0, 0.22);
+            transition: all 0.3s ease;
+            margin: 0 8px;
+        }
+
+        button:hover {
+            background: linear-gradient(135deg, #a0522d, #b5651d);
+            transform: translateY(-2px) scale(1.02);
+        }
+
+        hr {
+            border: none;
+            height: 2px;
+            background: linear-gradient(to right, transparent, #d1a16a, transparent);
+            margin: 12px auto 18px;
+        }
+
+        .footer-link {
+            text-align: right;
+            margin-top: 24px;
+        }
+
+        .footer-link a {
+            text-decoration: none;
+            color: #8b4513;
+            font-weight: bold;
+            padding: 8px 14px;
+            border-radius: 20px;
+            transition: all 0.3s ease;
+        }
+
+        .footer-link a:hover {
+            color: white;
+            background-color: #8b4513;
+        }
+
+        .intro-box {
+            background: rgba(245, 236, 223, 0.75);
+            border-left: 6px solid #8b4513;
+            border-radius: 10px;
+            padding: 14px 16px;
+            margin-bottom: 20px;
+        }
+
+        @media screen and (max-width: 768px) {
+            .title {
+                font-size: 30px;
+            }
+
+            .welcome {
+                font-size: 16px;
+            }
+
+            .nav-table, .content-table, .tip-box {
+                width: 94%;
+            }
+
+            .nav-table th {
+                font-size: 14px;
+                padding: 10px 6px;
+            }
+
+            .content-table td {
+                padding: 18px 16px;
+            }
+
+            h2 {
+                font-size: 24px;
+            }
+
+            h3 {
+                font-size: 19px;
+            }
+
+            p {
+                font-size: 15px;
+            }
+
+            button {
+                margin: 6px;
+            }
+
+            .bg-img {
+                height: 100vh;
+                min-width: 160%;
+            }
+        }
+    </style>
+</head>
+<body>
+    <img src="背景.jpg" alt="背景图" class="bg-img">
+
+    <a id="top"></a>
+
+    <h1 class="title">射箭文化</h1>
+    <p class="welcome" id="welcomeText">欢迎来到射箭文化网站</p>
+    <div class="time-box" id="timeText">当前时间：</div>
+    <hr width="82%">
+
+    <table class="nav-table">
+        <tr align="center">
+            <th><a href="#xuyan">序言</a></th>
+            <th><a href="lishi.html">射箭历史</a></th>
+            <th><a href="qiju.html">器具</a></th>
+            <th><a href="saishi.html">赛事介绍</a></th>
+            <th><a href="jiaoxue.html">教学内容</a></th>
+        </tr>
+    </table>
+
+    <div class="btn-area">
+        <button onclick="showMessage()">点击了解射箭注意事项</button>
+        <button onclick="showTip()">获取射箭小知识</button>
+    </div>
+
+    <div class="tip-box" id="tipBox">
+        点击上方“获取射箭小知识”按钮，可以随机查看一条与射箭相关的小知识。
+    </div>
+
+    <table class="content-table">
+        <tr>
+            <td valign="top">
+                <h2 id="xuyan">序言</h2>
+
+                <div class="intro-box">
+                    射箭不仅是一项古老的技艺，也是一项融合力量、专注与礼仪的运动。
+                </div>
+
+                <p>
+                    射箭(英语:archery)又称为箭术，是借助弓或弩的弹力将箭射出的一种技艺，最初是用作狩猎之用，后来应用到军事上。世界各地均有不同的传统射箭方法，有些地区更发展成一种仪式化的技术。例如儒家文化圈六艺中的“射艺”，在各地又分别发展为射箭技艺（中国）、弓术（日本）等。现代国际射箭比赛有射准射箭比赛、射远射箭比赛、室内射箭比赛、野外射箭比赛、环靶射箭比赛等多种。比赛方法和规则均不相同，多数为在不同距离内射中箭靶的环数计算成绩。
+                </p>
+
+                <h3><a href="lishi.html">射箭历史</a></h3>
+                <p>
+                    射箭是一项古老的运动，起源于远古时期。在中国，射箭有着悠久的历史，早在春秋战国时期就已有详细记载。古代射箭不仅是军事技能，也是贵族和文人修身养性的重要方式。随着时间的发展，射箭逐渐演变为现代竞技体育项目，并在世界范围内得到了广泛推广。
+                </p>
+
+                <h3><a href="qiju.html">器具</a></h3>
+                <p>
+                    射箭所需要器具包括弓、箭、箭靶以及各种护具。弓的种类繁多，常见的有反曲弓、复合弓和传统长弓等。箭靶通常由不同颜色的环组成，每个环代表不同的分数。护具则包括护臂、护胸和指套等，用于保护射手在射箭过程中免受伤害。
+                </p>
+
+                <h3><a href="saishi.html">赛事介绍</a></h3>
+                <p>
+                    射箭赛事是展示这项运动魅力的重要平台。世界射箭锦标赛、奥运会射箭比赛等都是国际上非常重要的赛事。此外，各国也会举办各种地方性与全国性的比赛，为射箭爱好者提供展示技术与交流经验的机会。
+                </p>
+
+                <h3><a href="jiaoxue.html">教学内容</a></h3>
+                <p>
+                    射箭教学不仅包括站姿、握弓、搭箭、开弓、瞄准和撒放等基本动作训练，还包括安全教育和心理素质培养。通过系统学习，初学者能够逐步掌握规范动作，提高命中率，感受射箭运动中专注与稳定的魅力。
+                </p>
+
+                <p class="footer-link">
+                    <a href="#top">返回顶部</a>
+                </p>
+            </td>
+        </tr>
+    </table>
+
+    <script>
+        function showMessage() {
+            alert("射箭注意事项：弓不空放，箭不对人，统一射箭，统一拔箭。");
+        }
+
+        function showTip() {
+            var tips = [
+                "射箭小知识：射箭时稳定的站姿是保证命中率的重要基础。",
+                "射箭小知识：拉弓时动作应平稳，避免突然发力影响准度。",
+                "射箭小知识：现代奥运会正式比赛常用的弓种是竞技反曲弓。",
+                "射箭小知识：护臂和指套等护具可以减少训练中的受伤风险。",
+                "射箭小知识：射箭不仅考验力量，更考验专注力和心理稳定性。"
+            ];
+            var randomIndex = Math.floor(Math.random() * tips.length);
+            document.getElementById("tipBox").innerHTML = tips[randomIndex];
+        }
+
+        function updateTimeAndGreeting() {
+            var now = new Date();
+            var hour = now.getHours();
+
+            var greeting = "";
+            if (hour < 12) {
+                greeting = "早上好，欢迎来到射箭文化网站";
+            } else if (hour < 18) {
+                greeting = "下午好，欢迎来到射箭文化网站";
+            } else {
+                greeting = "晚上好，欢迎来到射箭文化网站";
+            }
+
+            document.getElementById("welcomeText").innerHTML = greeting;
+
+            var year = now.getFullYear();
+            var month = now.getMonth() + 1;
+            var day = now.getDate();
+            var hours = now.getHours();
+            var minutes = now.getMinutes();
+            var seconds = now.getSeconds();
+
+            if (minutes < 10) minutes = "0" + minutes;
+            if (seconds < 10) seconds = "0" + seconds;
+
+            document.getElementById("timeText").innerHTML =
+                "当前时间：" + year + "年" + month + "月" + day + "日 " +
+                hours + ":" + minutes + ":" + seconds;
+        }
+
+        setInterval(updateTimeAndGreeting, 1000);
+        updateTimeAndGreeting();
+    </script>
+</body>
+</html>
